@@ -1,4 +1,5 @@
-﻿import pygame
+﻿from ast import Pass
+import pygame
 import keyboard
 import os
 import glob
@@ -43,8 +44,9 @@ pygame.mixer.music.play()
 
 
 out=''
+counter=0
 
-print("Press 'p' to play/pause, 'left arrow' to rewind, 'right arrow' to forward")
+print("Press 'p' to place time on lyric line, press 's' to save")
 
 # تابع برای نمایش زمان پخش بر حسب میلی‌ثانیه و تبدیل به ثانیه
 def show_time():
@@ -52,13 +54,12 @@ def show_time():
     seconds = milliseconds // 1000
     minutes = seconds // 60
     seconds = seconds % 60
-    print(f"Music time: {minutes:02}:{seconds:02}")
+    print(f"Music time: {minutes:02}:{seconds:02} , lines {counter+1}/{len(lines)}")
     return f'[00:{minutes:02}:{seconds:02}]'
 
-counter=0
 
 # حلقه برای گوش دادن به ورودی صفحه کلید
-while pygame.mixer.music.get_busy():
+while True:
     try:
         # اگر کلید p فشار داده شود
         if keyboard.is_pressed('p'):
@@ -72,12 +73,16 @@ while pygame.mixer.music.get_busy():
                 pass
 
 
+        if keyboard.is_pressed('s'):
+            
+            with open(f'{filename[0:-4]}.lrc', 'w') as file:
+                file.write(out)
+            print("Lyrics saved to music.lrc")
+            break
+            while keyboard.is_pressed('s'):
+                pass
+
 
     except:
+        print('exeption')
         break
-
-
-
-with open(f'{filename[0:-4]}.lrc', 'w') as file:
-    file.write(out)
-print("Lyrics saved to music.lrc")
