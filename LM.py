@@ -24,11 +24,22 @@ else:
     print('No MP3 file found in the directory.')
     exit(0)
 
+
+print('please entre full lyric (press Ctrl+D or Ctrl+Z to finish):')
+
+lines = []
+
+while True:
+    try:
+        line = input()
+        lines.append(line)
+    except EOFError:
+        break
+
+
+
 # پخش آهنگ
 pygame.mixer.music.play()
-
-# پرچم برای تعیین وضعیت پخش یا توقف
-is_paused = False
 
 
 out=''
@@ -44,51 +55,29 @@ def show_time():
     print(f"Music time: {minutes:02}:{seconds:02}")
     return f'[00:{minutes:02}:{seconds:02}]'
 
-
-def get_lyric():
-    global out
-    input()
-    i = input()
-    out = out + show_time() + i + '\n'
-    print(show_time() + i)
+counter=0
 
 # حلقه برای گوش دادن به ورودی صفحه کلید
-while True:
+while pygame.mixer.music.get_busy():
     try:
         # اگر کلید p فشار داده شود
         if keyboard.is_pressed('p'):
-            # اگر آهنگ پخش شود، متوقف کن
-            if not is_paused:
-                pygame.mixer.music.pause()
-                is_paused = True
-                show_time()  # نمایش زمان توقف
-            # اگر آهنگ متوقف است، دوباره پخش کن
-            else:
-                pygame.mixer.music.unpause()
-                is_paused = False
-                print("Music Playing")
+            temp=show_time()+lines[counter]+'\n'
+            counter=counter+1
+            print(temp)
+            out=out+temp
             
             # برای جلوگیری از چند بار اجرا شدن با یک فشار دکمه، مکث کوتاه اضافه می‌کنیم
             while keyboard.is_pressed('p'):
                 pass
 
-        if keyboard.is_pressed('i'):
-            get_lyric()
-            while keyboard.is_pressed('i'):
-                pass
-
-        if keyboard.is_pressed('o'):
-            print(out)
-            while keyboard.is_pressed('o'):
-                pass
-
-        if keyboard.is_pressed('s'):
-            with open(f'{filename[0:-4]}.lrc', 'w') as file:
-                file.write(out)
-            print("Lyrics saved to music.lrc")
-            while keyboard.is_pressed('s'):
-                pass
 
 
     except:
         break
+
+
+
+with open(f'{filename[0:-4]}.lrc', 'w') as file:
+    file.write(out)
+print("Lyrics saved to music.lrc")
