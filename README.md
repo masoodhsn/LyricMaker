@@ -1,0 +1,2 @@
+# LyricMaker
+making laric manually 
