@@ -4,10 +4,6 @@ import keyboard
 import os
 import glob
 
-import sys
-sys.stdin.reconfigure(encoding='utf-8')
-sys.stdout.reconfigure(encoding='utf-8')
-
 # راه‌اندازی pygame
 pygame.mixer.init()
 
@@ -34,13 +30,21 @@ print('please entre full lyric (press Ctrl+Z to finish):')
 
 lines = []
 
+ep=True
+line=''
 while True:
     try:
-        line = input()
-        lines.append(line)
+        i = input()
+        if not i == '':
+            if ep:
+                line=i+'<br>'
+                ep=False
+            else:
+                lines.append(line+i)
+                ep=True
+                line=''
     except EOFError:
         break
-
 
 
 # پخش آهنگ
@@ -50,7 +54,7 @@ pygame.mixer.music.play()
 out=''
 counter=0
 
-print("Press 'p' to place time on lyric line, press 's' to save")
+print("Press 'p' to place time on lyric line")
 
 # تابع برای نمایش زمان پخش بر حسب میلی‌ثانیه و تبدیل به ثانیه
 def show_time():
@@ -76,15 +80,12 @@ while True:
             while keyboard.is_pressed('p'):
                 pass
 
-
-        if keyboard.is_pressed('s'):
+        if not (len(lines) - counter):
             
             with open(f'{filename[0:-4]}.lrc', 'w' , encoding='utf-8') as file:
                 file.write(out)
             print("Lyrics saved to music.lrc")
             break
-            while keyboard.is_pressed('s'):
-                pass
 
 
     except:
