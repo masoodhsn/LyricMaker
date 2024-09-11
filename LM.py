@@ -4,6 +4,10 @@ import keyboard
 import os
 import glob
 
+import sys
+sys.stdin.reconfigure(encoding='utf-8')
+sys.stdout.reconfigure(encoding='utf-8')
+
 # راه‌اندازی pygame
 pygame.mixer.init()
 
@@ -26,7 +30,7 @@ else:
     exit(0)
 
 
-print('please entre full lyric (press Ctrl+D or Ctrl+Z to finish):')
+print('please entre full lyric (press Ctrl+Z to finish):')
 
 lines = []
 
@@ -75,7 +79,7 @@ while True:
 
         if keyboard.is_pressed('s'):
             
-            with open(f'{filename[0:-4]}.lrc', 'w') as file:
+            with open(f'{filename[0:-4]}.lrc', 'w' , encoding='utf-8') as file:
                 file.write(out)
             print("Lyrics saved to music.lrc")
             break
