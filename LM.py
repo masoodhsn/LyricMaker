@@ -105,7 +105,7 @@ pygame.mixer.music.unload()
 # جابجا کردن فایل به پوشه جدید با استفاده از shutil.move
 
 sound = AudioSegment.from_mp3(filename)
-sound.export(filename[0:-4]+'.wav', format="wav")
+sound.export(filename[0:-4]+'.wav', format="mp3")
 
 #demo
 #####################
