@@ -4,6 +4,7 @@ import os
 import glob
 import shutil  # برای جابجا کردن فایل
 from pydub import AudioSegment
+import subprocess
 
 # راه‌اندازی pygame
 pygame.mixer.init()
@@ -107,12 +108,24 @@ sound = AudioSegment.from_mp3(filename)
 sound.export(filename[0:-4]+'.wav', format="wav")
 
 #demo
+#####################
 audio = AudioSegment.from_mp3(filename)
 extracted_part = audio[60000:80000]
-extracted_part.export("demo_"+filename[0:-4]+".ogg", format="mp3")
+
+temp_wav = "temp.wav"
+extracted_part.export(temp_wav, format="wav")
+
+subprocess.run([
+    'ffmpeg', '-i', temp_wav, 
+    '-c:a', 'libopus',  # استفاده از کدک Opus
+    '-b:a', '64k',      # بیت‌ریت مناسب برای پیام صوتی
+    "demo_"+filename[0:-4]+".ogg"
+])
+########################
 
 
 shutil.move(filename[0:-4]+'.lrc', filename[0:-4])
 shutil.move(filename[0:-4]+'.wav', filename[0:-4])
 shutil.move("demo_"+filename[0:-4]+".ogg", filename[0:-4])
 shutil.move(filename, filename[0:-4])
+os.remove(temp_wav)
