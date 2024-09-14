@@ -106,7 +106,13 @@ pygame.mixer.music.unload()
 sound = AudioSegment.from_mp3(filename)
 sound.export(filename[0:-4]+'.wav', format="wav")
 
+#demo
+audio = AudioSegment.from_mp3(filename)
+extracted_part = audio[60000:80000]
+extracted_part.export("demo_"+filename[0:-4]+".ogg", format="mp3")
+
 
 shutil.move(filename[0:-4]+'.lrc', filename[0:-4])
 shutil.move(filename[0:-4]+'.wav', filename[0:-4])
+shutil.move("demo_"+filename[0:-4]+".ogg", filename[0:-4])
 shutil.move(filename, filename[0:-4])
