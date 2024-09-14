@@ -20,7 +20,8 @@ def find_first_mp3_file():
 # پیدا کردن فایل صوتی
 filename = find_first_mp3_file()
 
-shutil.rmtree(filename[0:-4])
+if os.path.isdir(filename[0:-4]):
+    shutil.rmtree(filename[0:-4])
 
 # ساخت پوشه با نام آهنگ بدون پسوند
 os.makedirs(filename[0:-4], exist_ok=True)
@@ -108,5 +109,4 @@ sound.export(filename[0:-4]+'.wav', format="wav")
 
 shutil.move(filename[0:-4]+'.lrc', filename[0:-4])
 shutil.move(filename[0:-4]+'.wav', filename[0:-4])
-
-os.remove(filename)
+shutil.move(filename, filename[0:-4])
