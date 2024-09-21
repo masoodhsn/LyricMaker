@@ -2,38 +2,38 @@
 import keyboard
 import os
 import glob
-import shutil  # برای جابجا کردن فایل
+import shutil  # to move file
 from pydub import AudioSegment
 import subprocess
 
-# راه‌اندازی pygame
+# start pygame
 pygame.mixer.init()
 
-# پیدا کردن اولین فایل mp3 در دایرکتوری 
+# finding mp3 file
 def find_first_mp3_file():
     mp3_files = glob.glob('*.mp3')
     if mp3_files:
         return mp3_files[0]
-    else:
-        exit(0)
     return None
 
-# پیدا کردن فایل صوتی
+
 filename = find_first_mp3_file()
 
-if os.path.isdir(filename[0:-4]):
-    shutil.rmtree(filename[0:-4])
-
-# ساخت پوشه با نام آهنگ بدون پسوند
-os.makedirs(filename[0:-4], exist_ok=True)
 
 if filename:
-    # بارگذاری فایل صوتی
     pygame.mixer.music.load(filename)
     print(f'Loaded {filename}')
 else:
     print('No MP3 file found in the directory.')
     exit(0)
+
+
+
+# create directory
+if os.path.isdir(filename[0:-4]):
+    shutil.rmtree(filename[0:-4])
+os.makedirs(filename[0:-4], exist_ok=True)
+
 
 print('Please enter full lyrics (press Ctrl+Z to finish):')
 
@@ -41,7 +41,7 @@ lines = []
 ep = True
 line = ''
 
-# دریافت ورودی‌های کاربر برای شعر
+# input lyric
 while True:
     try:
         i = input()
@@ -56,7 +56,7 @@ while True:
     except EOFError:
         break
 
-# پخش آهنگ
+# playing music
 pygame.mixer.music.play()
 
 out = ''
@@ -64,7 +64,7 @@ counter = 0
 
 print("Press 'p' to place time on lyric line")
 
-# تابع برای نمایش زمان پخش بر حسب میلی‌ثانیه و تبدیل به ثانیه
+# get time in lyric format
 def show_time():
     milliseconds = pygame.mixer.music.get_pos()
     seconds = milliseconds // 1000
@@ -73,10 +73,10 @@ def show_time():
     print(f"Music time: {minutes:02}:{seconds:02} , lines {counter+1}/{len(lines)}")
     return f'[00:{minutes:02}:{seconds:02}]'
 
-# حلقه برای گوش دادن به ورودی صفحه کلید
+# keyboard loop
 while True:
     try:
-        # اگر کلید p فشار داده شود
+        # pressing p
         if keyboard.is_pressed('p'):
             temp = show_time() + lines[counter] + '\n'
             counter = counter + 1
@@ -84,7 +84,7 @@ while True:
             out = out + temp
             
             
-            # برای جلوگیری از چند بار اجرا شدن با یک فشار دکمه، مکث کوتاه اضافه می‌کنیم
+            # lock p
             while keyboard.is_pressed('p'):
                 pass
 
@@ -100,9 +100,9 @@ while True:
         break
 
 
+# stop music to move it
 pygame.mixer.music.stop()
 pygame.mixer.music.unload()
-# جابجا کردن فایل به پوشه جدید با استفاده از shutil.move
 
 sound = AudioSegment.from_mp3(filename)
 sound.export(filename[0:-4]+'.wav', format="mp3")
@@ -117,8 +117,8 @@ extracted_part.export(temp_wav, format="wav")
 
 subprocess.run([
     'ffmpeg', '-i', temp_wav, 
-    '-c:a', 'libopus',  # استفاده از کدک Opus
-    '-b:a', '64k',      # بیت‌ریت مناسب برای پیام صوتی
+    '-c:a', 'libopus', 
+    '-b:a', '64k',     
     "demo_"+filename[0:-4]+".ogg"
 ])
 ########################
