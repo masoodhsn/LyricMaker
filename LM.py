@@ -68,10 +68,11 @@ print("Press 'p' to place time on lyric line")
 def show_time():
     milliseconds = pygame.mixer.music.get_pos()
     seconds = milliseconds // 1000
+    milliseconds=milliseconds-seconds*1000
     minutes = seconds // 60
     seconds = seconds % 60
     print(f"Music time: {minutes:02}:{seconds:02} , lines {counter+1}/{len(lines)}")
-    return f'[00:{minutes:02}:{seconds:02}]'
+    return f'[00:{minutes:02}:{seconds:02}.{milliseconds:03}]'
 
 # keyboard loop
 while True:
